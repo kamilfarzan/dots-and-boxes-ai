@@ -1,5 +1,6 @@
-from utils import print_2d, toggle_turn
-from terminal import draw_board
+from src.utils import print_2d, toggle_turn
+from src.terminal import draw_board
+from random import choice
 
 DOTS = 4
 horizontal_edges = [[0] * (DOTS - 1) for _ in range(DOTS)]
@@ -34,12 +35,12 @@ def list_all_legal_moves():
 
     for r1 in range(DOTS):
         for e1 in range(DOTS - 1):
-            if horizontal_edges[r1][e1] != 0:
+            if horizontal_edges[r1][e1] == 0:
                 horiz_legal_moves.append(("H", r1, e1))
     
     for r2 in range(DOTS - 1):
         for e2 in range(DOTS):
-            if vertical_edges[r2][e2] != 0:
+            if vertical_edges[r2][e2] == 0:
                 verti_legal_moves.append(("V", r2, e2))
 
     return horiz_legal_moves + verti_legal_moves
@@ -160,39 +161,31 @@ def count_boxes():
                 p2_score += 1
 
     return (p1_score, p2_score)
-# a move    = ("H", r, c)           # or "V"
-# moves = (("H", 0, 1), ("V", 0, 2), ("H", 1, 1), ("V", 0, 1), ("V", 0, 1))
-
-# for move in moves:
-#     if not(check_move_legality(move)):
-#         print("ILLEGAL: ", move)
-#         continue
-#     set_move(move, turn)
-#     box_complete = detect_box_completion(move, turn)
-#     if not(box_complete):
-#         turn = toggle_turn(turn)
-
-# print("Current list of moves:", moves)
-# draw_board(horizontal_edges, vertical_edges, boxes)
-# print('Turn is:', turn)
 
 
 
 ### GAME LOOP BETWEEN HUMAN PLAYERS
 turn = 1
 draw_board(horizontal_edges, vertical_edges, boxes)
+print(len(list_all_legal_moves()))
 while not(game_end_detection()):
     # INPUT
-    print(f"For inputting move (current turn is Player {turn}): ")
-    orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
-    # row, col = map(int, tuple(input("Enter row and col: (r, c)")))
-    row = int(input("Enter row: "))
-    col = int(input("Enter col: "))
-    move = (orientation, row, col)
+    if turn == 1:
+        print(f"For inputting move (current turn is Player {turn}): ")
+        orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
+        row = int(input("Enter row: "))
+        col = int(input("Enter col: "))
+        move = (orientation, row, col)
+    else:
+        print(f"Current turn is Player {turn} (AI)")
+        move = choice(list_all_legal_moves())
+        print("Player 2's move: ", move)
+        # move pritn(list_all_legal_moves())
 
+    # CHECK IF MOVE LEGAL
     if not(check_move_legality(move)):
-        print("ILLEGAL MOVE. TRY AGAIN.")
-        continue
+            print("ILLEGAL MOVE. TRY AGAIN.")
+            continue
 
     set_move(move, turn)
 

@@ -7,7 +7,7 @@ def draw_board(horizontal_edges, vertical_edges, boxes):
     box_size = len(boxes)
 
     for r in range(DOTS):
-        # First: print dot + horizontal edges row 
+        # first, print dot + horizontal edges row 
         dot_row = ""
         for c in range(len(horizontal_edges[0])):
             dot_row += "•"
@@ -21,7 +21,7 @@ def draw_board(horizontal_edges, vertical_edges, boxes):
         dot_row += "•"  # last dot
         console.print(dot_row)
 
-        # Then: print vertical edges + boxes row (except after last dots row)
+        # then, print vertical edges + boxes row (except after last dots row)
         if r < box_size:
             box_row = ""
             for c in range(len(vertical_edges[0])):
