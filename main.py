@@ -5,15 +5,44 @@ DOTS = 4
 horizontal_edges = [[0] * (DOTS - 1) for _ in range(DOTS)]
 vertical_edges = [[0] * (DOTS) for _ in range(DOTS - 1)]
 boxes = [[0] * (DOTS - 1) for _ in range(DOTS - 1)]
-turn = 1
 
 # FUNCTIONS
+def check_move_legality(move):
+    if (move[0] == "H"):
+        if not(0 <= move[1] < DOTS and 0 <= move[2] < DOTS - 1):
+            return 0
+        if (horizontal_edges[move[1]][move[2]] != 0):
+            return 0
+        return 1
+    elif (move[0] == "V"):
+        if not(0 <= move[1] < DOTS - 1 and 0 <= move[2] < DOTS):
+            return 0
+        if (vertical_edges[move[1]][move[2]] != 0):
+            return 0
+        return 1
+    else:
+        return 0
 
 def set_move(move, turn):
     if move[0] == "H":
         horizontal_edges[move[1]][move[2]] = turn
     else:
         vertical_edges[move[1]][move[2]] = turn
+
+def list_all_legal_moves():
+    horiz_legal_moves, verti_legal_moves = [], []
+
+    for r1 in range(DOTS):
+        for e1 in range(DOTS - 1):
+            if horizontal_edges[r1][e1] != 0:
+                horiz_legal_moves.append(("H", r1, e1))
+    
+    for r2 in range(DOTS - 1):
+        for e2 in range(DOTS):
+            if vertical_edges[r2][e2] != 0:
+                verti_legal_moves.append(("V", r2, e2))
+
+    return horiz_legal_moves + verti_legal_moves
 
 def get_boxes_for_edge(orientation, row, col):
     if orientation == "H":
@@ -106,16 +135,79 @@ def detect_box_completion(move, turn):
     
     return box_filled
 
+def game_end_detection():
+    # horizontal_edges, vertical_edges
+    for r1 in horizontal_edges:
+        for e1 in r1:
+            if e1 == 0:
+                return 0
+    
+    for r2 in vertical_edges:
+        for e2 in r2:
+            if e2 == 0:
+                return 0
 
+    return 1
+
+def count_boxes():
+    p1_score, p2_score = 0, 0
+
+    for row in boxes:
+        for box in row:
+            if box == 1:
+                p1_score += 1
+            else:
+                p2_score += 1
+
+    return (p1_score, p2_score)
 # a move    = ("H", r, c)           # or "V"
-moves = (("H", 0, 1), ("V", 0, 2), ("H", 1, 1), ("V", 0, 1))
+# moves = (("H", 0, 1), ("V", 0, 2), ("H", 1, 1), ("V", 0, 1), ("V", 0, 1))
 
-for move in moves:
+# for move in moves:
+#     if not(check_move_legality(move)):
+#         print("ILLEGAL: ", move)
+#         continue
+#     set_move(move, turn)
+#     box_complete = detect_box_completion(move, turn)
+#     if not(box_complete):
+#         turn = toggle_turn(turn)
+
+# print("Current list of moves:", moves)
+# draw_board(horizontal_edges, vertical_edges, boxes)
+# print('Turn is:', turn)
+
+
+
+### GAME LOOP BETWEEN HUMAN PLAYERS
+turn = 1
+draw_board(horizontal_edges, vertical_edges, boxes)
+while not(game_end_detection()):
+    # INPUT
+    print(f"For inputting move (current turn is Player {turn}): ")
+    orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
+    # row, col = map(int, tuple(input("Enter row and col: (r, c)")))
+    row = int(input("Enter row: "))
+    col = int(input("Enter col: "))
+    move = (orientation, row, col)
+
+    if not(check_move_legality(move)):
+        print("ILLEGAL MOVE. TRY AGAIN.")
+        continue
+
     set_move(move, turn)
+
     box_complete = detect_box_completion(move, turn)
+
+    ### PRINT GRID
+    draw_board(horizontal_edges, vertical_edges, boxes)
+
     if not(box_complete):
         turn = toggle_turn(turn)
-
-print("Current default moves:", moves)
-draw_board(horizontal_edges, vertical_edges, boxes)
-print('Turn is:', turn)
+else:
+    p1_score, p2_score = count_boxes()
+    if p1_score > p2_score:
+        print("P1 WINS")
+    elif p2_score > p1_score:
+        print("P2 WINS")
+    else:
+        print("DRAW")

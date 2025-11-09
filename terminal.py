@@ -42,8 +42,5 @@ def draw_board(horizontal_edges, vertical_edges, boxes):
                         box_row += "[on blue] 1 [/]"
                     elif b == 2:
                         box_row += "[on red] 2 [/]"
-            # last vertical bar on right side
-            box_row += " " if vertical_edges[r][-1] == 0 else (
-                "[bold blue]│[/]" if vertical_edges[r][-1] == 1 else "[bold red]│[/]"
-            )
+            
             console.print(box_row)
