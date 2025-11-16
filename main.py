@@ -1,5 +1,6 @@
 from src.utils import print_2d, toggle_turn
 from src.terminal import draw_board
+from src.ai import best_ai_move
 from random import choice
 
 DOTS = 4
@@ -162,14 +163,25 @@ def count_boxes():
 
     return (p1_score, p2_score)
 
+# def clone_board_state(horizontal_edges, vertical_edges, boxes, turn, scores):
+#     copied_horizontal_edges = deepcopy(horizontal_edges)
+#     copied_vertical_edges = deepcopy(vertical_edges)
+#     copied_boxes = deepcopy(boxes)
+#     copied_turn = deepcopy(turn)
+#     copied_scores = deepcopy(scores)
+
+#     return copied_horizontal_edges, copied_vertical_edges, copied_boxes, copied_turn, copied_scores
 
 
 ### GAME LOOP BETWEEN HUMAN PLAYERS
 turn = 1
 draw_board(horizontal_edges, vertical_edges, boxes)
 print(len(list_all_legal_moves()))
+p1_score, p2_score = 0, 0
+
 while not(game_end_detection()):
     # INPUT
+    print(f"Current score is: P1:{p1_score}, P2:{p2_score}")
     if turn == 1:
         print(f"For inputting move (current turn is Player {turn}): ")
         orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
@@ -178,7 +190,7 @@ while not(game_end_detection()):
         move = (orientation, row, col)
     else:
         print(f"Current turn is Player {turn} (AI)")
-        move = choice(list_all_legal_moves())
+        move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
         print("Player 2's move: ", move)
         # move pritn(list_all_legal_moves())
 
@@ -196,6 +208,11 @@ while not(game_end_detection()):
 
     if not(box_complete):
         turn = toggle_turn(turn)
+    else:
+        p1_score, p2_score = 0, 0
+        for box in boxes:
+            p1_score += box.count(1)
+            p2_score += box.count(2)
 else:
     p1_score, p2_score = count_boxes()
     if p1_score > p2_score:
