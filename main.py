@@ -47,7 +47,10 @@ def list_all_legal_moves():
     return horiz_legal_moves + verti_legal_moves
 
 def get_boxes_for_edge(orientation, row, col):
-    if orientation == "H":
+    box_rows, box_cols = DOTS - 1, DOTS - 1
+    boxes = []
+
+    if (orientation == "H"):
         # if 0, 0 -> box=0,0
         # if 1, 0 -> box=0,0 or 1,0
         # if 2, 0 -> box=1,0 or 2,0
@@ -62,14 +65,12 @@ def get_boxes_for_edge(orientation, row, col):
         # if 1, 2 -> box=0,2 or 1,2
         # if 2, 2 -> box=1,2 or 2,2
         # if 3, 2 -> box=2,2
-        
-        if row == 0:
-            return ((0, col),)
-        elif row == 3:
-            return ((2, col),)
-        else:
-            # return (1) -> ((row, 0), (row-1, 1)) and (2) -> ((row, 1), (row-1, 2))
-            return ((row, col), (row - 1, col))
+
+        if (0 <= col < box_cols):
+            if (0 <= row - 1 < box_rows):
+                boxes.append((row - 1, col))
+            if (0 <= row < box_rows):
+                boxes.append((row, col))
     else:
         # if 0, 0 -> box=0,0
         # if 0, 1 -> box=0,0 or 0,1
@@ -86,13 +87,13 @@ def get_boxes_for_edge(orientation, row, col):
         # if 2, 2 -> box=2,1 or 2,2
         # if 2, 3 -> box=2,2
 
-        if col == 0:
-            return ((row, 0),)
-        elif col == 3:
-            return ((row, 2),)
-        else:
-            # return (1) -> ((row, 0), (row, 1)) and (2) -> ((row, 1), (row, 2))
-            return ((row, col - 1), (row, col))
+        if (0 <= row < box_rows):
+            if (0 <= col - 1 < box_cols):
+                boxes.append((row, col - 1))
+            if (0 <= col < box_cols):
+                boxes.append((row, col))
+    
+    return tuple(boxes)
 
 def check_box_complete(box):
     # if box = 0, 0 --> ("H" -> (0, 0), (1, 0)), ("V" -> (0, 0), (0, 1))
