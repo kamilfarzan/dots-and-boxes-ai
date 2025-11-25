@@ -3,7 +3,7 @@ from math import inf
 from typing import List, Tuple, Dict
 # from utils import toggle_turn
 
-DOTS = 4
+DOTS = 5
 
 Move = Tuple[str, int, int]
 
@@ -369,9 +369,17 @@ def best_ai_move(horizontal_edges: List[List[int]],
     ai_player = turn
     root_state = clone_board_state(horizontal_edges, vertical_edges, boxes, turn)
     legal_moves = list_all_legal_moves(root_state)
-    
+
+    # print(len(legal_moves))
+
     if not(legal_moves):
         raise ValueError("No legal moves available.")
+
+    total_possible_initial_moves = 2*((DOTS - 1)**2 + (DOTS - 1)) # formula for square grids: 2*(n^2 + n) where n is the number of boxes
+    
+    if (DOTS > 4):
+        if (len(legal_moves) >= (total_possible_initial_moves * 0.75)): # decrease depth when number of legal moves left are more than 75% of initial possible moves
+            depth -= 1 # decrease depth for the first few moves, because search for unnecessary improvements
 
     best_move = None
     best_score = -inf
@@ -380,7 +388,9 @@ def best_ai_move(horizontal_edges: List[List[int]],
     def move_priority(move):
         new_state, box_filled = simulate_move(root_state, move, ai_player)
         return 1 if box_filled else 0
-    legal_moves.sort(key=move_priority, reverse=True)
+    
+    # give priority to moves that complete a box
+    legal_moves.sort(key=move_priority, reverse=True) 
 
     maximizing = True   # currently AI's move, so root is maximizing
     alpha = -inf

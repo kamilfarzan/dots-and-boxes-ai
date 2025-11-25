@@ -3,10 +3,14 @@ from src.terminal import draw_board
 from src.ai import best_ai_move
 from random import choice
 
-DOTS = 4
+DOTS = 5
 horizontal_edges = [[0] * (DOTS - 1) for _ in range(DOTS)]
 vertical_edges = [[0] * (DOTS) for _ in range(DOTS - 1)]
 boxes = [[0] * (DOTS - 1) for _ in range(DOTS - 1)]
+# print(len(horizontal_edges))
+# print(len(horizontal_edges[0]))
+# print(len(vertical_edges))
+# print(len(boxes))
 
 # FUNCTIONS
 def check_move_legality(move):
@@ -184,15 +188,20 @@ while not(game_end_detection()):
     # INPUT
     print(f"Current score is: P1:{p1_score}, P2:{p2_score}")
     if turn == 1:
-        print(f"For inputting move (current turn is Player {turn}): ")
-        orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
-        row = int(input("Enter row: "))
-        col = int(input("Enter col: "))
-        move = (orientation, row, col)
+        # print(f"For inputting move (current turn is Player {turn}): ")
+        # orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
+        # row = int(input("Enter row: "))
+        # col = int(input("Enter col: "))
+        # move = (orientation, row, col)    
+        print(f"Current turn is Player {turn} (WEAK AI)")
+        # move = choice(list_all_legal_moves())
+        move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
+        # move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
+        print(f"Player {turn}'s move: {move}")
     else:
         print(f"Current turn is Player {turn} (AI)")
         move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
-        print("Player 2's move: ", move)
+        print(f"Player {turn}'s move: {move}")
         # move pritn(list_all_legal_moves())
 
     # CHECK IF MOVE LEGAL
