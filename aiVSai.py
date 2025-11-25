@@ -180,24 +180,29 @@ def count_boxes():
 
 ### GAME LOOP BETWEEN HUMAN PLAYERS
 turn = 1
-draw_board(horizontal_edges, vertical_edges, boxes)
-print("Total legal moves:", len(list_all_legal_moves()))
+# draw_board(horizontal_edges, vertical_edges, boxes)
+# print("Total legal moves:", len(list_all_legal_moves()))
 p1_score, p2_score = 0, 0
 
 while not(game_end_detection()):
     # INPUT
-    print(f"Current score is: P1:{p1_score}, P2:{p2_score}")
+    # print(f"Current score is: P1:{p1_score}, P2:{p2_score}")
     if turn == 1:
-        print(f"For inputting move (current turn is Player {turn}): ")
-        orientation = input("Enter horizontal or vertical, either 'H' or 'V': ").strip()
-        row = int(input("Enter row: ").strip())
-        col = int(input("Enter col: ").strip())
-        move = (orientation, row, col)
-        print(f"Player {turn}'s move: {move}")
-    else:
-        print(f"Current turn is Player {turn} (AI)")
+        # print(f"For inputting move (current turn is Player {turn}): ")
+        # orientation = input("Enter horizontal or vertical, either 'H' or 'V': ")
+        # row = int(input("Enter row: "))
+        # col = int(input("Enter col: "))
+        # move = (orientation, row, col)    
+        # print(f"Current turn is Player {turn} (RANDOM)")
+        # move = choice(list_all_legal_moves())
         move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
-        print(f"Player {turn}'s move: {move}")
+        # move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
+        # move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
+        # print(f"Player {turn}'s move: {move}")
+    else:
+        # print(f"Current turn is Player {turn} (AI)")
+        move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
+        # print(f"Player {turn}'s move: {move}")
         # move pritn(list_all_legal_moves())
 
     # CHECK IF MOVE LEGAL
@@ -210,7 +215,7 @@ while not(game_end_detection()):
     box_complete = detect_box_completion(move, turn)
 
     ### PRINT GRID
-    draw_board(horizontal_edges, vertical_edges, boxes)
+    # draw_board(horizontal_edges, vertical_edges, boxes)
 
     if not(box_complete):
         turn = toggle_turn(turn)
@@ -221,9 +226,12 @@ while not(game_end_detection()):
             p2_score += box.count(2)
 else:
     p1_score, p2_score = count_boxes()
-    if p1_score > p2_score:
-        print("P1 WINS")
-    elif p2_score > p1_score:
-        print("P2 WINS")
-    else:
-        print("DRAW")
+    print(f"Current score is: P1:{p1_score}, P2:{p2_score}")
+    with open("aiVSai.csv", "a") as f:
+        f.write(f"{p1_score},{p2_score}\n")
+    # if p1_score > p2_score:
+    #     print("P1 WINS")
+    # elif p2_score > p1_score:
+    #     print("P2 WINS")
+    # else:
+    #     print("DRAW")

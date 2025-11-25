@@ -1,9 +1,10 @@
 from copy import deepcopy
 from math import inf
 from typing import List, Tuple, Dict
+from random import random
 # from utils import toggle_turn
 
-DOTS = 5
+DOTS = 4
 
 Move = Tuple[str, int, int]
 
@@ -378,7 +379,7 @@ def best_ai_move(horizontal_edges: List[List[int]],
     total_possible_initial_moves = 2*((DOTS - 1)**2 + (DOTS - 1)) # formula for square grids: 2*(n^2 + n) where n is the number of boxes
     
     if (DOTS > 4):
-        if (len(legal_moves) >= (total_possible_initial_moves * 0.75)): # decrease depth when number of legal moves left are more than 75% of initial possible moves
+        if (len(legal_moves) >= (total_possible_initial_moves * 0.5)): # decrease depth when number of legal moves left are more than 75% of initial possible moves
             depth -= 1 # decrease depth for the first few moves, because search for unnecessary improvements
 
     best_move = None
@@ -407,5 +408,8 @@ def best_ai_move(horizontal_edges: List[List[int]],
         if (score > best_score) or (best_move is None):
             best_score = score
             best_move = move
+        elif (score == best_score):
+            if random() < 0.4:
+                best_move = move
     
     return best_move
