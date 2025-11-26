@@ -204,6 +204,7 @@ def get_heuristic_evaluation(state: Dict, ai_player: int) -> float:
     # actual evaluation from here
     box_rows, box_cols = DOTS - 1, DOTS - 1
 
+    # check for three sided boxes
     for box_row in range(box_rows):
         for box_col in range(box_cols):
             owner = state["boxes"][box_row][box_col]
@@ -364,7 +365,7 @@ def best_ai_move(horizontal_edges: List[List[int]],
     
     # returns best move for ai
     # returns move tuple eg. ("H", r, c)
-    # depth: 4 - 6 recommended for 3x3 boxes
+    # depth: 4 - 6 is good for 3x3 boxes
 
     assert turn in (1, 2)
     ai_player = turn

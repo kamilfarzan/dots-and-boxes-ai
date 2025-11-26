@@ -194,6 +194,10 @@ while not(game_end_detection()):
         col = int(input("Enter col: ").strip())
         move = (orientation, row, col)
         print(f"Player {turn}'s move: {move}")
+
+        # print(f"Current turn is Player {turn} (RANDOM)")
+        # move = choice(list_all_legal_moves())
+        # print(f"Player {turn}'s move: {move}")
     else:
         print(f"Current turn is Player {turn} (AI)")
         move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=4)
