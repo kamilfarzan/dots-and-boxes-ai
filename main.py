@@ -188,6 +188,7 @@ while not(game_end_detection()):
     # INPUT
     print(f"Current score is: P1:{p1_score}, P2:{p2_score}")
     if turn == 1:
+        ## HUMAN SELECTION SECTION
         print(f"For inputting move (current turn is Player {turn}): ")
         orientation = input("Enter horizontal or vertical, either 'H' or 'V': ").strip()
         row = int(input("Enter row: ").strip())
@@ -195,8 +196,14 @@ while not(game_end_detection()):
         move = (orientation, row, col)
         print(f"Player {turn}'s move: {move}")
 
+        ## RANDOM MOVE SECTION
         # print(f"Current turn is Player {turn} (RANDOM)")
         # move = choice(list_all_legal_moves())
+        # print(f"Player {turn}'s move: {move}")
+
+        ## WEAK AI MOVE SECTION
+        # print(f"Current turn is Player {turn} (WEAK AI)")
+        # move = best_ai_move(horizontal_edges, vertical_edges, boxes, turn, depth=2)
         # print(f"Player {turn}'s move: {move}")
     else:
         print(f"Current turn is Player {turn} (AI)")
@@ -222,7 +229,7 @@ while not(game_end_detection()):
         p1_score, p2_score = 0, 0
         for box in boxes:
             p1_score += box.count(1)
-            p2_score += box.count(2)
+            p2_score += box.count(2)    
 else:
     p1_score, p2_score = count_boxes()
     if p1_score > p2_score:
